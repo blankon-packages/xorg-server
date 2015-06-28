@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: BlankOn Developers <blankon-dev@googlegroups.com>
 XSBC-Original-Maintainer: Debian X Strike Force <debian-x@lists.debian.org>
 Build-Depends:
- debhelper (>= 7),
+ debhelper (>= 9),
  dpkg-dev (>= 1.16.1),
  quilt,
  lsb-release,
@@ -17,9 +17,10 @@ Build-Depends:
  xfonts-utils (>= 1:7.5+1),
  x11proto-bigreqs-dev (>= 1:1.1.0),
  x11proto-composite-dev (>= 1:0.4),
- x11proto-core-dev (>= 7.0.22),
+ x11proto-core-dev (>= 7.0.26),
  x11proto-damage-dev (>= 1.1),
  x11proto-fixes-dev (>= 1:5.0),
+ x11proto-fonts-dev (>= 2.1.3),
  x11proto-kb-dev (>= 1.0.3),
  x11proto-xinerama-dev,
  x11proto-randr-dev (>= 1.4.0),
@@ -35,7 +36,7 @@ Build-Depends:
  x11proto-xf86vidmode-dev (>= 2.2.99.1),
  x11proto-present-dev,
  x11proto-dri3-dev,
- xtrans-dev (>= 1.3.2),
+ xtrans-dev (>= 1.3.5),
  libxau-dev (>= 1:1.0.5-2),
  x11proto-input-dev (>= 2.3),
  x11proto-dri2-dev (>= 2.8),
@@ -46,13 +47,11 @@ Build-Depends:
  libpciaccess-dev (>= 0.12.901),
  libgcrypt-dev,
  nettle-dev,
- libdbus-1-dev [kfreebsd-any],
- libhal-dev [kfreebsd-any],
  libudev-dev (>= 151-3),
  libselinux1-dev (>= 2.0.80),
  libaudit-dev,
  x11proto-xf86dri-dev (>= 2.1.0),
- libdrm-dev (>= 2.4.3) [!hurd-i386],
+ libdrm-dev (>= 2.4.46) [!hurd-i386],
  x11proto-gl-dev (>= 1.4.17),
  libgl1-mesa-dev (>= 9.2),
  libxmuu-dev (>= 1:0.99.1),
@@ -72,14 +71,21 @@ Build-Depends:
  libxv-dev,
  libxinerama-dev,
  libxshmfence-dev (>= 1.1) [!hurd-i386],
+# glamor
+ libepoxy-dev [i386 amd64 kfreebsd-any],
+ libegl1-mesa-dev [i386 amd64 kfreebsd-any],
+ libgbm-dev [i386 amd64],
 # XCB bits for Xephyr
  libxcb1-dev,
  libxcb-shape0-dev,
+ libxcb-render0-dev,
+ libxcb-render-util0-dev,
  libxcb-util0-dev,
  libxcb-image0-dev,
  libxcb-icccm4-dev,
  libxcb-shm0-dev,
  libxcb-keysyms1-dev,
+ libxcb-randr0-dev,
  libxcb-xv0-dev,
  libxcb-glx0-dev,
  libxcb-xf86dri0-dev (>= 1.6),
@@ -88,6 +94,8 @@ Build-Depends:
  x11-xkb-utils,
 # getpeereid()
  libbsd-dev [kfreebsd-any],
+# xwayland
+ libwayland-dev [i386 amd64],
 Standards-Version: 3.9.2
 Vcs-Git: git://git.debian.org/git/pkg-xorg/xserver/xorg-server
 Vcs-Browser: http://git.debian.org/?p=pkg-xorg/xserver/xorg-server.git
@@ -96,8 +104,11 @@ Package: xserver-xorg-core
 Architecture: any
 Depends:
  xserver-common (>= ${source:Version}),
- keyboard-configuration,
- udev (>= 149),
+ keyboard-configuration [i386 amd64 kfreebsd-any],
+ udev (>= 149) [i386 amd64],
+ devd [kfreebsd-any],
+# for glamor; not a shlibdep because we use epoxy
+ libegl1-mesa [i386 amd64 kfreebsd-any] | libegl1 [i386 amd64 kfreebsd-any],
  ${shlibs:Depends},
  ${misc:Depends},
 Recommends: libgl1-mesa-dri (>= 7.10.2-4)
@@ -130,11 +141,15 @@ Breaks:
  xserver-xorg-video-vga (<= 1:4.1.0-8),
  libgl1-mesa-dri (<< 7.10.2-4),
  libgl1-mesa-dri-experimental (<< 7.10.2-4),
+Replaces:
+ xserver-xorg-video-modesetting,
 Conflicts:
  xserver-xorg-input-evtouch,
+ xserver-xorg-video-modesetting,
 Provides:
  ${videoabi},
  ${inputabi},
+ xserver-xorg-video-modesetting,
 Description: Xorg X server - core server
  The Xorg X server is an X server for several architectures and operating
  systems, which is derived from the XFree86 4.x series of X servers.
@@ -156,8 +171,9 @@ Depends:
 # merged: xserver-common (>= ${source:Version}),
  xkb-data-udeb,
  x11-xkb-utils-udeb,
-# disabled: keyboard-configuration,
- udev-udeb (>= 149),
+# disabled: keyboard-configuration [i386 amd64 kfreebsd-any],
+ udev-udeb (>= 149) [i386 amd64],
+ devd-udeb [kfreebsd-any],
  ${shlibs:Depends},
  ${misc:Depends},
 Provides:
@@ -170,7 +186,7 @@ Package: xserver-xorg-dev
 Architecture: any
 Depends:
  libpixman-1-dev (>= 0.27.2),
- x11proto-core-dev (>= 7.0.22),
+ x11proto-core-dev (>= 7.0.26),
  x11proto-input-dev (>= 2.3),
  x11proto-xext-dev (>= 7.2.99.901),
  x11proto-video-dev,
@@ -178,7 +194,7 @@ Depends:
  x11proto-render-dev (>= 2:0.11),
  x11proto-dri2-dev (>= 2.8),
  x11proto-gl-dev (>= 1.4.17),
- x11proto-fonts-dev,
+ x11proto-fonts-dev (>= 2.1.3),
  x11proto-xinerama-dev,
  x11proto-kb-dev,
  x11proto-xf86dri-dev,
@@ -331,6 +347,7 @@ Description: Xorg - the X.Org X server (debugging symbols)
 
 Package: xserver-common
 Architecture: all
+Multi-Arch: foreign
 Depends:
  x11-common,
  xkb-data,
@@ -356,3 +373,14 @@ Description: Xorg X server - source files
  .
  Unless you are building a software product using X server sources,
  you probably want xserver-xorg and/or xserver-xorg-core instead.
+
+Package: xwayland
+Architecture: i386 amd64
+Depends:
+ xserver-common (>= ${source:Version}),
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: Xwayland X server
+ This package provides an X server running on top of wayland, using wayland
+ input devices for input and forwarding either the root window or individual
+ top-level windows as wayland surfaces.

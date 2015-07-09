@@ -1,3 +1,27 @@
+xorg-server (2:1.17.2-1blankon1) tambora; urgency=low
+
+  * New Upstream updates
+  * Merge Whit sid
+
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Thu, 09 Jul 2015 20:53:18 +0700
+
+xorg-server (2:1.17.2-1) unstable; urgency=medium
+
+  [ Sven Joachim ]
+  * New upstream release.
+    + symbols: Fix sdksyms.sh to cope with gcc5 (Closes: #778187)
+    + os/access: fix regression in server interpreted auth (Closes: #784687)
+    + dix: Fix image byte order on big endian hardware (Closes: #785474)
+    + int10: Fix error check for pci_device_map_legacy (Closes: #787144)
+    + modesetting: Include dix-config.h from dumb_bo.c (Closes: #789823)
+    + unauthorised local client access in XWayland [CVE-2015-3164]
+      (Closes: #788410)
+  * Install the modesetting.4 manpage into xserver-xorg-core (Closes: #789646)
+  * Build xserver-xorg-core-udeb on all architectures again (Closes: #775205)
+  * Update debian/upstream/signing-key.asc.
+
+ -- Julien Cristau <jcristau@debian.org>  Wed, 01 Jul 2015 18:07:40 +0200
+
 xorg-server (2:1.17.1-2blankon1) tambora; urgency=medium
 
   * New Upstream Release

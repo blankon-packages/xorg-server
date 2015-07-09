@@ -72,9 +72,9 @@ Build-Depends:
  libxinerama-dev,
  libxshmfence-dev (>= 1.1) [!hurd-i386],
 # glamor
- libepoxy-dev [i386 amd64 kfreebsd-any],
- libegl1-mesa-dev [i386 amd64 kfreebsd-any],
- libgbm-dev [i386 amd64],
+ libepoxy-dev [any kfreebsd-any],
+ libegl1-mesa-dev [any kfreebsd-any],
+ libgbm-dev,
 # XCB bits for Xephyr
  libxcb1-dev,
  libxcb-shape0-dev,
@@ -95,7 +95,7 @@ Build-Depends:
 # getpeereid()
  libbsd-dev [kfreebsd-any],
 # xwayland
- libwayland-dev [i386 amd64],
+ libwayland-dev,
 Standards-Version: 3.9.2
 Vcs-Git: git://git.debian.org/git/pkg-xorg/xserver/xorg-server
 Vcs-Browser: http://git.debian.org/?p=pkg-xorg/xserver/xorg-server.git
@@ -104,11 +104,11 @@ Package: xserver-xorg-core
 Architecture: any
 Depends:
  xserver-common (>= ${source:Version}),
- keyboard-configuration [i386 amd64 kfreebsd-any],
- udev (>= 149) [i386 amd64],
+ keyboard-configuration [any kfreebsd-any],
+ udev (>= 149),
  devd [kfreebsd-any],
 # for glamor; not a shlibdep because we use epoxy
- libegl1-mesa [i386 amd64 kfreebsd-any] | libegl1 [i386 amd64 kfreebsd-any],
+ libegl1-mesa [any kfreebsd-any] | libegl1 [any kfreebsd-any],
  ${shlibs:Depends},
  ${misc:Depends},
 Recommends: libgl1-mesa-dri (>= 7.10.2-4)
@@ -166,13 +166,13 @@ Package: xserver-xorg-core-udeb
 XC-Package-Type: udeb
 Section: debian-installer
 # exclude sparc because of linker errors
-Architecture: alpha amd64 armel armhf hppa hurd-i386 i386 ia64 kfreebsd-amd64 kfreebsd-i386 mips mipsel powerpc powerpcspe s390
+Architecture: any
 Depends:
 # merged: xserver-common (>= ${source:Version}),
  xkb-data-udeb,
  x11-xkb-utils-udeb,
-# disabled: keyboard-configuration [i386 amd64 kfreebsd-any],
- udev-udeb (>= 149) [i386 amd64],
+# disabled: keyboard-configuration [linux-any kfreebsd-any],
+ udev-udeb (>= 149) [linux-any],
  devd-udeb [kfreebsd-any],
  ${shlibs:Depends},
  ${misc:Depends},
@@ -375,7 +375,7 @@ Description: Xorg X server - source files
  you probably want xserver-xorg and/or xserver-xorg-core instead.
 
 Package: xwayland
-Architecture: i386 amd64
+Architecture: linux-any
 Depends:
  xserver-common (>= ${source:Version}),
  ${shlibs:Depends},

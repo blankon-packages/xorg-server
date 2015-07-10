@@ -72,8 +72,8 @@ Build-Depends:
  libxinerama-dev,
  libxshmfence-dev (>= 1.1) [!hurd-i386],
 # glamor
- libepoxy-dev [any kfreebsd-any],
- libegl1-mesa-dev [any kfreebsd-any],
+ libepoxy-dev,
+ libegl1-mesa-dev,
  libgbm-dev,
 # XCB bits for Xephyr
  libxcb1-dev,
@@ -104,11 +104,11 @@ Package: xserver-xorg-core
 Architecture: any
 Depends:
  xserver-common (>= ${source:Version}),
- keyboard-configuration [any kfreebsd-any],
+ keyboard-configuration [i386 amd64 kfreebsd-any],
  udev (>= 149),
  devd [kfreebsd-any],
 # for glamor; not a shlibdep because we use epoxy
- libegl1-mesa [any kfreebsd-any] | libegl1 [any kfreebsd-any],
+ libegl1-mesa [i386 amd64 kfreebsd-any] | libegl1 [any kfreebsd-any],
  ${shlibs:Depends},
  ${misc:Depends},
 Recommends: libgl1-mesa-dri (>= 7.10.2-4)
@@ -172,7 +172,7 @@ Depends:
  xkb-data-udeb,
  x11-xkb-utils-udeb,
 # disabled: keyboard-configuration [linux-any kfreebsd-any],
- udev-udeb (>= 149) [linux-any],
+ udev-udeb (>= 149) [i386 amd64],
  devd-udeb [kfreebsd-any],
  ${shlibs:Depends},
  ${misc:Depends},

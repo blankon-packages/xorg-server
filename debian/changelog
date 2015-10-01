@@ -1,9 +1,34 @@
-xorg-server (2:1.17.2-1blankon1) tambora; urgency=low
+xorg-server (2:1.17.2-2blankon1) tambora; urgency=medium
 
-  * New Upstream updates
-  * Merge Whit sid
+  * Merge with Debian Experimental 
 
- -- Rahman Yusri Aftian <aftian@di.blankon.in>  Thu, 09 Jul 2015 20:53:18 +0700
+ -- mhy <dotovr@mhy>  Fri, 02 Oct 2015 00:36:19 +0700
+
+xorg-server (2:1.17.2-2) experimental; urgency=medium
+
+  [ Laurent Bigonville ]
+  * Enable logind support for the main build on Linux.
+  * Build and ship the setuid root wrapper from upstream, replacing
+    xserver-xorg's.
+
+  [ Julien Cristau ]
+  * Take over x11-common's handling of the X wrapper; ship the wrapper in a
+    new xserver-xorg-legacy package.
+  * Patch the wrapper to reset Xorg's environment.  I don't believe it needs
+    any variable there, and if that turns out to be wrong we can add a
+    whitelist or hardcode some values.
+
+ -- Julien Cristau <jcristau@debian.org>  Wed, 19 Aug 2015 11:14:05 +0200
+
+xorg-server (2:1.17.2-1.1) unstable; urgency=medium
+
+  * Non-Maintainer Upload.
+
+  [ Sven Joachim ]
+  * Install the whole usr/share/man/man4 directory into xserver-xorg-core,
+    fixes FTBFS on hurd where modesetting.4 does not exist (Closes: #794644).
+
+ -- Samuel Thibault <sthibault@debian.org>  Tue, 11 Aug 2015 10:45:35 +0200
 
 xorg-server (2:1.17.2-1) unstable; urgency=medium
 
@@ -22,16 +47,9 @@ xorg-server (2:1.17.2-1) unstable; urgency=medium
 
  -- Julien Cristau <jcristau@debian.org>  Wed, 01 Jul 2015 18:07:40 +0200
 
-xorg-server (2:1.17.1-2blankon1) tambora; urgency=medium
+xorg-server (2:1.17.1-2) unstable; urgency=medium
 
-  * New Upstream Release
-  * Merge Whit SId
-
- -- Rahman Yusri Aftian <aftian@di.blankon.in>  Sun, 28 Jun 2015 23:30:32 +0700
-
-xorg-server (2:1.17.1-2) experimental; urgency=medium
-
-  * Disable libdrm support on hurd and in the kfreebsd udev build, so we don't
+  * Disable libdrm support on hurd and in the kfreebsd udeb build, so we don't
     try building the modesetting driver without libdrm.  We should probably
     revisit this later and ship modesetting_drv.so in d-i, but this should do
     for now.
@@ -191,18 +209,6 @@ xorg-server (2:1.15.0.901-1) unstable; urgency=medium
   * New upstream release
 
  -- Julien Cristau <jcristau@debian.org>  Mon, 31 Mar 2014 12:19:57 +0200
-
-xorg-server (2:1.15.0-2blankon2) suroboyo; urgency=low
-
-  * debian/rules SUPOORT=www.blankonlinux.or.id
-
- -- Rahman Yusri Aftian <aftian@di.blankon.in>  Tue, 11 Feb 2014 09:30:56 +0700
-
-xorg-server (2:1.15.0-2blankon1) suroboyo; urgency=low
-
-  * Rebuild 
-
- -- Rahman Yusri Aftian <aftian@di.blankon.in>  Sat, 08 Feb 2014 18:10:34 +0700
 
 xorg-server (2:1.15.0-2) unstable; urgency=medium
 

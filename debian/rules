@@ -46,9 +46,11 @@ endif
 ifeq ($(DEB_HOST_ARCH_OS), linux)
 	selinux = --enable-xselinux
 	wayland = --enable-xwayland
+	logind  = --enable-systemd-logind
 else
 	selinux = --disable-xselinux
 	wayland = --disable-xwayland
+	logind  = --disable-systemd-logind
 endif
 
 ifeq ($(DEB_HOST_ARCH_OS), hurd)
@@ -66,7 +68,7 @@ else
 	dri += --disable-dri3
 endif
 
-config_backend = --disable-config-dbus --disable-config-hal
+config_backend = --disable-config-hal
 ifeq ($(DEB_HOST_ARCH_OS), linux)
 	config_backend += --enable-config-udev
 else ifeq ($(DEB_HOST_ARCH_OS), kfreebsd)
@@ -103,7 +105,7 @@ endif
 INSTALL=/usr/bin/install
 
 VENDOR = $(shell lsb_release -i -s)
-SUPPORT = http://www.blankonlinux.or.id/
+SUPPORT = http://www.debian.org/support
 
 SOURCE_NAME    :=  xorg-server
 SOURCE_VERSION := $(shell dpkg-parsechangelog | awk -F': ' '/^Version: / {print $$2}')
@@ -164,6 +166,8 @@ confflags_main = \
 	$(selinux) \
 	--enable-xfree86-utils \
 	$(wayland) \
+	$(logind) \
+	--enable-suid-wrapper \
 	--enable-dmx \
 	--enable-xvfb \
 	--enable-xnest \
@@ -196,6 +200,8 @@ confflags_udeb = \
 	--disable-xselinux \
 	--disable-xfree86-utils \
 	--disable-xwayland \
+	--disable-systemd-logind \
+	--disable-suid-wrapper \
 	--disable-dmx \
 	--disable-xvfb \
 	--disable-xnest \
@@ -233,6 +239,7 @@ $(STAMP_DIR)/configure-%: $(STAMP_DIR)/autoreconf
 	  --infodir=\$${prefix}/share/info \
 	  --sysconfdir=/etc \
 	  --localstatedir=/var \
+	  --libexecdir=\$${libdir}/xorg \
 	  $(confflags) \
 	  $(confflags_$*) \
 	  $(vars)
@@ -323,6 +330,8 @@ binary-deb:
 	dh_lintian
 	dh_compress
 	dh_fixperms
+	-chown root:root $(CURDIR)/debian/xserver-xorg-legacy/usr/lib/xorg/Xorg.wrap
+	-chmod ug+s $(CURDIR)/debian/xserver-xorg-legacy/usr/lib/xorg/Xorg.wrap
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol

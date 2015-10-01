@@ -5,6 +5,7 @@ Maintainer: BlankOn Developers <blankon-dev@googlegroups.com>
 XSBC-Original-Maintainer: Debian X Strike Force <debian-x@lists.debian.org>
 Build-Depends:
  debhelper (>= 9),
+ po-debconf,
  dpkg-dev (>= 1.16.1),
  quilt,
  lsb-release,
@@ -49,9 +50,9 @@ Build-Depends:
  nettle-dev,
  libudev-dev (>= 151-3),
  libselinux1-dev (>= 2.0.80),
- libaudit-dev,
+ libaudit-dev [linux-any],
  x11proto-xf86dri-dev (>= 2.1.0),
- libdrm-dev (>= 2.4.46) [!hurd-i386],
+ libdrm-dev (>= 2.4.46),
  x11proto-gl-dev (>= 1.4.17),
  libgl1-mesa-dev (>= 9.2),
  libxmuu-dev (>= 1:0.99.1),
@@ -70,7 +71,7 @@ Build-Depends:
  libxfixes-dev (>= 1:3.0.0),
  libxv-dev,
  libxinerama-dev,
- libxshmfence-dev (>= 1.1) [!hurd-i386],
+ libxshmfence-dev (>= 1.1),
 # glamor
  libepoxy-dev,
  libegl1-mesa-dev,
@@ -93,9 +94,11 @@ Build-Depends:
  xkb-data,
  x11-xkb-utils,
 # getpeereid()
- libbsd-dev [kfreebsd-any],
+ libbsd-dev,
 # xwayland
  libwayland-dev,
+#logind
+  libdbus-1-dev (>= 1.0),
 Standards-Version: 3.9.2
 Vcs-Git: git://git.debian.org/git/pkg-xorg/xserver/xorg-server
 Vcs-Browser: http://git.debian.org/?p=pkg-xorg/xserver/xorg-server.git
@@ -104,11 +107,11 @@ Package: xserver-xorg-core
 Architecture: any
 Depends:
  xserver-common (>= ${source:Version}),
- keyboard-configuration [i386 amd64 kfreebsd-any],
- udev (>= 149),
+ keyboard-configuration [linux-any kfreebsd-any],
+ udev (>= 149) [linux-any],
  devd [kfreebsd-any],
 # for glamor; not a shlibdep because we use epoxy
- libegl1-mesa [i386 amd64 kfreebsd-any] | libegl1 [any kfreebsd-any],
+ libegl1-mesa [linux-any kfreebsd-any] | libegl1 [linux-any kfreebsd-any],
  ${shlibs:Depends},
  ${misc:Depends},
 Recommends: libgl1-mesa-dri (>= 7.10.2-4)
@@ -141,8 +144,10 @@ Breaks:
  xserver-xorg-video-vga (<= 1:4.1.0-8),
  libgl1-mesa-dri (<< 7.10.2-4),
  libgl1-mesa-dri-experimental (<< 7.10.2-4),
+ xserver-xorg (<< 1:7.7+10~),
 Replaces:
  xserver-xorg-video-modesetting,
+ xserver-xorg (<< 1:7.7+10~),
 Conflicts:
  xserver-xorg-input-evtouch,
  xserver-xorg-video-modesetting,
@@ -172,7 +177,7 @@ Depends:
  xkb-data-udeb,
  x11-xkb-utils-udeb,
 # disabled: keyboard-configuration [linux-any kfreebsd-any],
- udev-udeb (>= 149) [i386 amd64],
+ udev-udeb (>= 149) [linux-any],
  devd-udeb [kfreebsd-any],
  ${shlibs:Depends},
  ${misc:Depends},
@@ -384,3 +389,18 @@ Description: Xwayland X server
  This package provides an X server running on top of wayland, using wayland
  input devices for input and forwarding either the root window or individual
  top-level windows as wayland surfaces.
+
+Package: xserver-xorg-legacy
+Architecture: any
+Priority: extra
+Depends:
+ xserver-common (>= ${source:Version}),
+ ${shlibs:Depends},
+ ${misc:Depends},
+Breaks:
+ x11-common (<< 1:7.7+10~),
+Replaces:
+ x11-common (<< 1:7.7+10~),
+Description: setuid root Xorg server wrapper
+ This package provides a wrapper for the Xorg X server, which is
+ necessary for legacy drivers and non-Linux kernels.

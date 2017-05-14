@@ -6,3 +6,4 @@
 05_Revert-Unload-submodules.diff
 #08_xfree86_fix_ia64_inx_outx.diff
 xorg-wrapper-envp.diff
+xorg-server_1.19.3-1.diff

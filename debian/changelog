@@ -1,3 +1,9 @@
+xorg-server (2:1.19.3-1blankon1) uluwatu; urgency=medium
+
+  * New upstream release
+
+ -- Anto Samalona <ansamsoftdev@gmail.com>  Sun, 14 May 2017 21:36:31 +0800
+
 xorg-server (2:1.17.2-2blankon2) uluwatu; urgency=medium
 
   * upload to Uluwatu
